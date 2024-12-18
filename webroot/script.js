@@ -4,6 +4,8 @@ const scenes = {
       options: [
         { label: "🔍 The Stolen Jewel", next: "jewel_intro" },
         { label: "👨‍🍳 The Missing Chef", next: "chef_intro" },
+        { label: "🏰 The Vanishing Heirloom", next: "heirloom_intro" },
+        { label: "🚆 The Train Mystery", next: "train_intro" },
       ],
     },
   
@@ -76,6 +78,61 @@ const scenes = {
       description: "🎉 You saved the chef and arrested the kidnappers. The town celebrates your heroism!",
       isEnding: true,
     },
+
+    heirloom_intro: {
+        description: "A centuries-old heirloom disappeared during a dinner party. Where do you start?",
+        options: [
+          { label: "Inspect the study 📜", next: "heirloom_safe" },
+        ],
+      },
+      heirloom_safe: {
+        description: "A note is scribbled: 'U2VhcmNoIHRoZSBzYWZl'. Decode it (Hint: Base64).",
+        type: "input",
+        validation: (input) => input.toLowerCase() === "search the safe",
+        successScene: "heirloom_safe_locked",
+        failureMessage: "That doesn't seem right. Try Base64 decoding!",
+      },
+      heirloom_safe_locked: {
+        description: "The safe has a lock: 'Xvat Gbzrf' (Hint: ROT13 Cipher).",
+        type: "input",
+        validation: (input) => input.toLowerCase() === "king tombs",
+        successScene: "heirloom_solved",
+        failureMessage: "The code seems wrong. Use ROT13 to decrypt!",
+      },
+      heirloom_solved: {
+        description: "🎉 You traced the thief! The butler stole the heirloom and hid it at King Tombs. Case closed!",
+        isEnding: true,
+      },
+
+      train_intro: {
+        description: "A passenger disappeared on an overnight train. Where do you start?",
+        options: [
+          { label: "Inspect passenger’s bag 🎒", next: "train_bag" },
+        ],
+      },
+      train_bag: {
+        description: "A clue reads: 'U2VhcmNoIENhciAz'. Decode it (Hint: Base64).",
+        type: "input",
+        validation: (input) => input.toLowerCase() === "search car 3",
+        successScene: "train_car3",
+        failureMessage: "Wrong answer! Decode the Base64 text carefully.",
+      },
+      train_car3: {
+        description: "You found a note in Car 3: 'Zbfg Zvffvba'. Decode it (Hint: ROT13).",
+        type: "input",
+        validation: (input) => input.toLowerCase() === "most mission",
+        successScene: "train_engine_room",
+        failureMessage: "That seems incorrect. Try using ROT13.",
+      },
+      train_engine_room: {
+        description: "The trail of clues leads to the engine room. You hear faint cries from a luggage compartment.",
+        options: [{ label: "Open the compartment 🚪", next: "train_solved" }],
+      },
+      train_solved: {
+        description: "🎉 You found the missing passenger tied up in the luggage compartment. Case closed!",
+        isEnding: true,
+      },
+
   };
   
   // Core Game Logic
