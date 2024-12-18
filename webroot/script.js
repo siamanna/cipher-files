@@ -6,6 +6,8 @@ const scenes = {
         { label: "👨‍🍳 The Missing Chef", next: "chef_intro" },
       ],
     },
+  
+    // The Stolen Jewel Mystery
     jewel_intro: {
       description: "A priceless jewel has been stolen! Where do you want to start?",
       options: [
@@ -14,17 +16,17 @@ const scenes = {
       ],
     },
     jewel_scene: {
-      description: "You see muddy footprints leading outside and broken glass.",
+      description: "You find muddy footprints leading to a back alley and a broken glass display.",
       options: [
         { label: "Follow the footprints 👣", next: "jewel_footprints" },
         { label: "Call forensics 🧪", next: "jewel_forensics" },
       ],
     },
     jewel_guard: {
-      description: "The guard reports hearing footsteps before falling asleep.",
+      description: "The guard nervously mentions faint footsteps before falling asleep.",
       options: [
-        { label: "Inspect the security cameras 📹", next: "jewel_cameras" },
-        { label: "Look for clues nearby 🔦", next: "jewel_clues" },
+        { label: "Inspect the security footage 📹", next: "jewel_cameras" },
+        { label: "Search the perimeter 🔦", next: "jewel_footprints" },
       ],
     },
     jewel_footprints: {
@@ -34,22 +36,52 @@ const scenes = {
         { label: "Search the alley further 🔍", next: "jewel_alley" },
       ],
     },
-    jewel_forensics: {
-      description: "Forensics finds a fingerprint on the glass.",
+    jewel_glove: {
+      description: "The glove has initials embroidered: 'M.T.' It might be a clue.",
       options: [
-        { label: "Run a fingerprint search 🕵️‍♀️", next: "jewel_results" },
-        { label: "Interview staff members 🗣️", next: "jewel_staff" },
+        { label: "Trace the initials 🕵️‍♂️", next: "jewel_suspect" },
       ],
     },
+    jewel_alley: {
+      description: "Further down the alley, you find a witness who saw someone running.",
+      options: [
+        { label: "Question the witness 👤", next: "jewel_witness" },
+      ],
+    },
+    jewel_witness: {
+      description: "The witness describes someone in a museum uniform.",
+      options: [
+        { label: "Cross-check museum staff records 📋", next: "jewel_suspect" },
+      ],
+    },
+    jewel_cameras: {
+      description: "The footage shows someone in a museum uniform sneaking out with the jewel.",
+      options: [
+        { label: "Trace the uniform back to the suspect 🚨", next: "jewel_suspect" },
+      ],
+    },
+    jewel_suspect: {
+      description: "You identify the thief as Mark Turner, a disgruntled former employee!",
+      options: [
+        { label: "Confront the suspect 🛑", next: "jewel_solved" },
+      ],
+    },
+    jewel_solved: {
+      description: "🎉 You recovered the stolen jewel and arrested the thief. Great job, Detective!",
+      options: [],
+      isEnding: true,
+    },
+  
+    // The Missing Chef Mystery
     chef_intro: {
-      description: "The town's famous chef disappeared during dinner prep! What do you do?",
+      description: "The town's famous chef disappeared during dinner prep! Where do you start?",
       options: [
         { label: "Search the kitchen 🔪", next: "chef_kitchen" },
         { label: "Question the waiter 🍽️", next: "chef_waiter" },
       ],
     },
     chef_kitchen: {
-      description: "You find a torn recipe page and a strange smell from the fridge.",
+      description: "The kitchen is spotless except for a torn recipe page.",
       options: [
         { label: "Read the recipe 📜", next: "chef_recipe" },
         { label: "Check the fridge ❄️", next: "chef_fridge" },
@@ -63,64 +95,75 @@ const scenes = {
       ],
     },
     chef_recipe: {
-      description: "The recipe mentions a rare spice last delivered yesterday.",
+      description: "The recipe notes mention a 'meeting at midnight near the pier.'",
       options: [
-        { label: "Check the spice cabinet 🧂", next: "chef_spice" },
-        { label: "Look for delivery records 📋", next: "chef_delivery" },
+        { label: "Go to the pier 🌃", next: "chef_pier" },
       ],
     },
     chef_fridge: {
-      description: "Inside the fridge, you find a note saying 'Meet at midnight.'",
+      description: "A note in the fridge says: 'Midnight at Pier 7.'",
       options: [
-        { label: "Investigate the meeting spot 🌃", next: "chef_meeting" },
-        { label: "Call for backup 🚔", next: "chef_backup" },
+        { label: "Head to Pier 7 🌉", next: "chef_pier" },
       ],
+    },
+    chef_delivery: {
+      description: "Delivery logs show a suspicious order sent to an abandoned warehouse.",
+      options: [
+        { label: "Go to the warehouse 🏚️", next: "chef_warehouse" },
+      ],
+    },
+    chef_interrogate: {
+      description: "The waiter confesses the chef was taken by shady figures to a warehouse.",
+      options: [
+        { label: "Investigate the warehouse 🕵️", next: "chef_warehouse" },
+      ],
+    },
+    chef_pier: {
+      description: "At the pier, you spot the chef being held hostage by two culprits.",
+      options: [
+        { label: "Rescue the chef 🛟", next: "chef_solved" },
+      ],
+    },
+    chef_warehouse: {
+      description: "Inside the warehouse, you find the chef tied up!",
+      options: [
+        { label: "Free the chef 🛟", next: "chef_solved" },
+      ],
+    },
+    chef_solved: {
+      description: "🎉 You saved the chef and arrested the kidnappers. The town is grateful!",
+      options: [],
+      isEnding: true,
     },
   };
   
-  // State for current scene
-  let currentScene = "start";
-  
-  // Function to render a scene dynamically
+  // Main logic to render scenes
   function renderScene(sceneId) {
     const scene = scenes[sceneId];
     const description = document.getElementById("scene-description");
     const optionsContainer = document.getElementById("options-container");
-  
-    // Update description
-    description.innerText = scene.description;
-  
-    // Clear previous buttons
-    optionsContainer.innerHTML = "";
-  
-    // Add new options as buttons
-    scene.options.forEach((option) => {
-      const button = document.createElement("button");
-      button.innerText = option.label;
-  
-      // Event listener for next scene
-      button.addEventListener("click", () => {
-        renderScene(option.next);
-      });
-  
-      optionsContainer.appendChild(button);
-    });
-  
-    // Show restart button only at key endings
     const restartBtn = document.getElementById("restart-btn");
-    if (["jewel_glove", "chef_meeting", "chef_spice"].includes(sceneId)) {
-      restartBtn.style.display = "block";
+  
+    description.innerText = scene.description;
+    optionsContainer.innerHTML = ""; // Clear previous options
+  
+    if (scene.isEnding) {
+      restartBtn.style.display = "block"; // Show restart button
     } else {
       restartBtn.style.display = "none";
     }
+  
+    scene.options.forEach((option) => {
+      const button = document.createElement("button");
+      button.innerText = option.label;
+      button.addEventListener("click", () => renderScene(option.next));
+      optionsContainer.appendChild(button);
+    });
   }
   
-  // Event listener for restart button
   document.getElementById("restart-btn").addEventListener("click", () => {
-    currentScene = "start";
-    renderScene(currentScene);
+    renderScene("start");
   });
   
-  // Initial render
-  renderScene(currentScene);
+  renderScene("start");
   
