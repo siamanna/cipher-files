@@ -7,7 +7,7 @@ const scenes = {
       ],
     },
   
-    // The Stolen Jewel Mystery
+    // Jewel Mystery with Cryptographic Challenges
     jewel_intro: {
       description: "A priceless jewel has been stolen! Where do you want to start?",
       options: [
@@ -16,128 +16,69 @@ const scenes = {
       ],
     },
     jewel_scene: {
-      description: "You find muddy footprints leading to a back alley and a broken glass display.",
-      options: [
-        { label: "Follow the footprints 👣", next: "jewel_footprints" },
-        { label: "Call forensics 🧪", next: "jewel_forensics" },
-      ],
-    },
-    jewel_guard: {
-      description: "The guard nervously mentions faint footsteps before falling asleep.",
-      options: [
-        { label: "Inspect the security footage 📹", next: "jewel_cameras" },
-        { label: "Search the perimeter 🔦", next: "jewel_footprints" },
-      ],
-    },
-    jewel_footprints: {
-      description: "The footprints lead to the back alley, where you find a torn glove.",
-      options: [
-        { label: "Inspect the glove 🧤", next: "jewel_glove" },
-        { label: "Search the alley further 🔍", next: "jewel_alley" },
-      ],
+      description: "A note near the broken glass reads: '.. / -- .. ... ... / -.-- --- ..-'. (Hint: Morse Code)",
+      type: "input",
+      validation: (input) => input.toLowerCase() === "i miss you",
+      successScene: "jewel_glove",
+      failureMessage: "The note doesn't make sense yet. Try decoding it again.",
     },
     jewel_glove: {
-      description: "The glove has initials embroidered: 'M.T.' It might be a clue.",
-      options: [
-        { label: "Trace the initials 🕵️‍♂️", next: "jewel_suspect" },
-      ],
+      description: "The glove has a cryptic text: 'TWFrZVRvV2lu'. Decode it (Hint: Base64).",
+      type: "input",
+      validation: (input) => input === "MakeToWin",
+      successScene: "jewel_safe",
+      failureMessage: "The text seems wrong. Use a Base64 decoder!",
     },
-    jewel_alley: {
-      description: "Further down the alley, you find a witness who saw someone running.",
-      options: [
-        { label: "Question the witness 👤", next: "jewel_witness" },
-      ],
-    },
-    jewel_witness: {
-      description: "The witness describes someone in a museum uniform.",
-      options: [
-        { label: "Cross-check museum staff records 📋", next: "jewel_suspect" },
-      ],
-    },
-    jewel_cameras: {
-      description: "The footage shows someone in a museum uniform sneaking out with the jewel.",
-      options: [
-        { label: "Trace the uniform back to the suspect 🚨", next: "jewel_suspect" },
-      ],
+    jewel_safe: {
+      description:
+        "The glove also contains a safe note with a hashed password: '5f4dcc3b5aa765d61d8327deb882cf99'.\n(Hint: Try common password lists).",
+      type: "input",
+      validation: (input) => input === "password",
+      successScene: "jewel_suspect",
+      failureMessage: "This hash matches a common password. Check RockYou.txt or common lists!",
     },
     jewel_suspect: {
-      description: "You identify the thief as Mark Turner, a disgruntled former employee!",
-      options: [
-        { label: "Confront the suspect 🛑", next: "jewel_solved" },
-      ],
+      description: "The decoded clues led you to Mark Turner, a disgruntled ex-employee!",
+      options: [{ label: "Confront Mark Turner 🛑", next: "jewel_solved" }],
     },
     jewel_solved: {
-      description: "🎉 You recovered the stolen jewel and arrested the thief. Great job, Detective!",
-      options: [],
+      description: "🎉 You caught the thief and retrieved the stolen jewel. Case closed!",
       isEnding: true,
     },
   
-    // The Missing Chef Mystery
+    // Chef Mystery with Cryptographic Challenges
     chef_intro: {
-      description: "The town's famous chef disappeared during dinner prep! Where do you start?",
+      description: "The famous chef disappeared during dinner prep. Where do you start?",
       options: [
         { label: "Search the kitchen 🔪", next: "chef_kitchen" },
         { label: "Question the waiter 🍽️", next: "chef_waiter" },
       ],
     },
     chef_kitchen: {
-      description: "The kitchen is spotless except for a torn recipe page.",
-      options: [
-        { label: "Read the recipe 📜", next: "chef_recipe" },
-        { label: "Check the fridge ❄️", next: "chef_fridge" },
-      ],
-    },
-    chef_waiter: {
-      description: "The waiter seems nervous but mentions a late delivery.",
-      options: [
-        { label: "Follow up on the delivery 🚚", next: "chef_delivery" },
-        { label: "Press the waiter for more info 🤔", next: "chef_interrogate" },
-      ],
-    },
-    chef_recipe: {
-      description: "The recipe notes mention a 'meeting at midnight near the pier.'",
-      options: [
-        { label: "Go to the pier 🌃", next: "chef_pier" },
-      ],
-    },
-    chef_fridge: {
-      description: "A note in the fridge says: 'Midnight at Pier 7.'",
-      options: [
-        { label: "Head to Pier 7 🌉", next: "chef_pier" },
-      ],
+      description: "A torn recipe reveals: 'N znva cnffjbeq vf ZVQABG'. (Hint: Caesar Cipher - Shift 13).",
+      type: "input",
+      validation: (input) => input.toLowerCase() === "a main password is MIDNIGHT".toLowerCase(),
+      successScene: "chef_delivery",
+      failureMessage: "Not quite right. Use ROT13 to decrypt it.",
     },
     chef_delivery: {
-      description: "Delivery logs show a suspicious order sent to an abandoned warehouse.",
-      options: [
-        { label: "Go to the warehouse 🏚️", next: "chef_warehouse" },
-      ],
-    },
-    chef_interrogate: {
-      description: "The waiter confesses the chef was taken by shady figures to a warehouse.",
-      options: [
-        { label: "Investigate the warehouse 🕵️", next: "chef_warehouse" },
-      ],
+      description: "The waiter confesses that the chef is held at Pier 7. But you'll need the secret passphrase: 'V2VsY29tZQ==' (Hint: Base64).",
+      type: "input",
+      validation: (input) => input === "Welcome",
+      successScene: "chef_pier",
+      failureMessage: "Wrong passphrase! Decode the Base64 properly.",
     },
     chef_pier: {
-      description: "At the pier, you spot the chef being held hostage by two culprits.",
-      options: [
-        { label: "Rescue the chef 🛟", next: "chef_solved" },
-      ],
-    },
-    chef_warehouse: {
-      description: "Inside the warehouse, you find the chef tied up!",
-      options: [
-        { label: "Free the chef 🛟", next: "chef_solved" },
-      ],
+      description: "At Pier 7, you spot the kidnappers with the chef! Ready for action.",
+      options: [{ label: "Rescue the chef 🛟", next: "chef_solved" }],
     },
     chef_solved: {
-      description: "🎉 You saved the chef and arrested the kidnappers. The town is grateful!",
-      options: [],
+      description: "🎉 You saved the chef and arrested the kidnappers. The town celebrates your heroism!",
       isEnding: true,
     },
   };
   
-  // Main logic to render scenes
+  // Core Game Logic
   function renderScene(sceneId) {
     const scene = scenes[sceneId];
     const description = document.getElementById("scene-description");
@@ -145,20 +86,35 @@ const scenes = {
     const restartBtn = document.getElementById("restart-btn");
   
     description.innerText = scene.description;
-    optionsContainer.innerHTML = ""; // Clear previous options
+    optionsContainer.innerHTML = "";
+    restartBtn.style.display = scene.isEnding ? "block" : "none";
   
-    if (scene.isEnding) {
-      restartBtn.style.display = "block"; // Show restart button
+    if (scene.type === "input") {
+      const input = document.createElement("input");
+      input.placeholder = "Enter your answer...";
+      input.id = "player-input";
+  
+      const submitBtn = document.createElement("button");
+      submitBtn.innerText = "Submit";
+      submitBtn.addEventListener("click", () => {
+        const playerAnswer = document.getElementById("player-input").value;
+        if (scene.validation(playerAnswer)) {
+          renderScene(scene.successScene);
+        } else {
+          alert(scene.failureMessage);
+        }
+      });
+  
+      optionsContainer.appendChild(input);
+      optionsContainer.appendChild(submitBtn);
     } else {
-      restartBtn.style.display = "none";
+      scene.options?.forEach((option) => {
+        const button = document.createElement("button");
+        button.innerText = option.label;
+        button.addEventListener("click", () => renderScene(option.next));
+        optionsContainer.appendChild(button);
+      });
     }
-  
-    scene.options.forEach((option) => {
-      const button = document.createElement("button");
-      button.innerText = option.label;
-      button.addEventListener("click", () => renderScene(option.next));
-      optionsContainer.appendChild(button);
-    });
   }
   
   document.getElementById("restart-btn").addEventListener("click", () => {
